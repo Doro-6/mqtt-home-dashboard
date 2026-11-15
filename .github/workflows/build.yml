@@ -27,3 +27,9 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y libmosquitto-dev
       - run: cc -std=c11 -O2 -Wall -Wextra -Wpedantic -pthread sensor/sensor.c -o /tmp/sensor -lmosquitto -lm
 
+  broker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build --file docker/mosquitto-broker.Dockerfile --tag mqtt-home-mosquitto:ci .
+

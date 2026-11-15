@@ -1,6 +1,9 @@
 services:
   broker:
-    image: eclipse-mosquitto:2.1.2-alpine
+    image: mqtt-home-mosquitto:2.1.2
+    build:
+      context: .
+      dockerfile: docker/mosquitto-broker.Dockerfile
     container_name: mqtt-home-broker
     restart: unless-stopped
     ports:

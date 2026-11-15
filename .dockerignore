@@ -1,0 +1,9 @@
+.git
+.env
+*.log
+mosquitto/data/
+sensor/build/
+web/node_modules/
+web/dist/
+third_party/mosquitto/build/
+third_party/mosquitto/**/build/
