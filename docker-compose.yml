@@ -1,0 +1,33 @@
+services:
+  broker:
+    image: eclipse-mosquitto:2.1.2-alpine
+    container_name: mqtt-home-broker
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:1883:1883"
+      - "127.0.0.1:9001:9001"
+    volumes:
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - broker-data:/mosquitto/data
+    healthcheck:
+      test: ["CMD-SHELL", "mosquitto_pub -h 127.0.0.1 -p 1883 -t healthcheck -m ok >/dev/null 2>&1"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  sensor:
+    build:
+      context: ./sensor
+    container_name: mqtt-home-sensor
+    restart: unless-stopped
+    environment:
+      MQTT_HOST: broker
+      MQTT_PORT: "1883"
+      SENSOR_MODE: ${SENSOR_MODE:-normal}
+    depends_on:
+      broker:
+        condition: service_healthy
+
+volumes:
+  broker-data:
+
